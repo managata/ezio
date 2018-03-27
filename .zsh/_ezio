@@ -1,0 +1,42 @@
+#compdef ezio
+_arguments \
+    '(-a --archive)'{'-a','--archive'}'[Archive files]' \
+    '(-x --extract)'{'-x','--extract'}'[Extract files]' \
+    '(-l --list)'{'-l','--list'}'[List files]' \
+    '(-v --view)'{'-v','--view'}'[View files]' \
+    '(-t --test)'{'-t','--test'}'[Test files]' \
+    '(-f --file=)'{'-f','--file='}'[archive name to process]:file:_files' \
+    '(-e --encrypt)'{'-e','--encrypt'}'[encrypt files]' \
+    '(-z --compress)'{'-z','--compress'}'[compress files]' \
+    '(-m --meta-list)'{'-m','--meta-list'}'[append metadata list for quick access]' \
+    '(-L --list-type=)'{'-L','--list-type='}'[(0-4) listing style]:0-4:(0 1 2 3 4)' \
+    '(-c --stdout)'{'-c','--stdout'}'[output archive/file to stdout, logs to stderr]' \
+    '(-d --extract-dir=)'{'-d','--extract-dir='}'[directory to which to extract files]:dir:_files' \
+    '(-W --overwrite)'{'-W','--overwrite'}'[overwrite existing files]' \
+    '(-p --position=)'{'-p','--position='}'[extract a file starting from the position]:num' \
+    '(-U --preserve-atime)'{'-U','--preserve-atime'}'[preserve atime (Linux only)]' \
+    '(--exclude=)''--exclude=''[exclude files matching regexp pattern. evaluate before --include]:regexp' \
+    '(--include=)''--include=''[include files matching regexp pattern]:regexp' \
+    '(-o --log-file=)'{'-o','--log-file'}'[log file]:file:_files' \
+    '(-O --log-level=)'{'-O','--log-level'}'[log level]:type:(-1 0 1 2 3 4 5 6 7)' \
+    '(-q --quiet)'{'-q','--quiet'}'[same as --log-level=-1]' \
+    '(--ignore-error)''--ignore-error''[continue as much as possible]' \
+    '(-Z --compress-type=)'{'-Z','--compress-type='}'[(z|l|x|g|b) compression algorithm (zstd|lz4|xz|gzip|bzip2) ]:type:(z l x g b)' \
+    '(-G --compress-level=)'{'-G','--compress-level='}'[compression level]:num' \
+    '(-D --dictionary=)'{'-D','--dictionary='}'[doctionary file for zstd (not implemented)]:file:_files' \
+    '(-E --encrypt-type=)'{'-E','--encrypt-type='}'[(a|c) encryption algorithm (aes256-gcm|chacha20-poly1305)]:type:(a c)' \
+    '(-H --hash-type=)'{'-H','--hash-type='}'[(2|5) hash algorithm (sha256|sha512)]:type:(2 5)' \
+    '(--pass-file=)''--pass-file=''[file which contain pass]:file:_files' \
+    '(--pass-fd=)''--pass-fd=''[file descriptor from which read pass]:num' \
+    '(--encrypt-key=)''--encrypt-key=''[public key or certification file for encryption]:file:_files' \
+    '(--decrypt-key=)''--decrypt-key=''[private key file for decryption]:file:_files' \
+    '(--sign-pass-file=)''--sign-pass-file=''[file which contain pass for --sign-key file]:file:_files' \
+    '(--sign-pass-fd=)''--sign-pass-fd=''[file descriptor from which read pass for --sign-key file]:num' \
+    '(--sign-key=)''--sign-key=''[private keyfile for signing]:file:_files' \
+    '(--verify-key=)''--verify-key=''[public key or certification file for verification]:file:_files' \
+    '(-r --erasure-code)'{'-r','--erasure-code'}'[append erasure core]' \
+    '(--block-size=)''--block-size=''[erasure code block size]:num' \
+    '(--block-data=)''--block-data=''[erasure code data block count]:num' \
+    '(--block-parity=)''--block-parity=''[erasure code parity block count]:num' \
+    '(--version)''--version''[print version]' \
+    '*:input files:_files'

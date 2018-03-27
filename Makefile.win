@@ -1,0 +1,76 @@
+#
+#
+#
+
+export GOPATH=z:\go
+
+TARGET := ezio
+BINARY := $(TARGET).exe
+
+VER := $(shell git describe)
+OS := windows
+ARCH := amd64
+RELEASE := ${OS}-${ARCH}-$(VER)
+
+DEBUG := -tags debug
+
+VERSION := -X main.version='$(VER)'
+STRIP := -s -w
+EXT := -Wl,--allow-multiple-definition
+
+BUILD_LDFLAGS := -ldflags "$(VERSION) $(STRIP) -extldflags '$(EXT)'"
+STATIC_LDFLAGS := -ldflags "$(VERSION) $(STRIP) -extldflags '-static $(EXT)'"
+DEBUG_LDFLAGS := -ldflags "$(VERSION) -extldflags '$(EXT)'"
+
+GO := go.exe
+export CC=x86_64-w64-mingw32-gcc
+export LD=x86_64-w64-mingw32-ld
+
+
+.PHONY: build
+build: $(BINARY)
+	$(GO) build -v $(BUILD_LDFLAGS) -o $(BINARY)
+	chmod 755 $(BINARY)
+
+.PHONY: static
+static:
+	$(GO) build -v $(STATIC_LDFLAGS) -o $(BINARY)
+	chmod 755 $(BINARY)
+
+.PHONY: debug
+debug:
+	$(GO) build -v $(DEBUG) $(DEBUG_LDFLAGS) -o $(BINARY)
+	chmod 755 $(BINARY)
+
+.PHONY: deps
+deps:
+	$(GO) get -v "github.com/akmistry/go-lz4"
+	$(GO) get -v "github.com/dsnet/compress/bzip2"
+#	$(GO) get -v "github.com/DataDog/zstd"
+	$(GO) get -v "github.com/managata/zstd"
+	$(GO) get -v "github.com/remyoudompheng/go-liblzma"
+	$(GO) get -v "github.com/templexxx/reedsolomon"
+	$(GO) get -v "github.com/jessevdk/go-flags"
+	$(GO) get -v "golang.org/x/crypto/ssh/terminal"
+	$(GO) get -v "golang.org/x/crypto/chacha20poly1305"
+	$(GO) get -v "golang.org/x/crypto/hkdf"
+
+.PHONY: dist
+dist:
+	make -f Makefile.win static
+	- rm -rf $(TARGET)-$(RELEASE)
+	mkdir $(TARGET)-$(RELEASE)
+	cp -a $(BINARY) $(TARGET)-$(RELEASE)
+	cp -a LICENSE $(TARGET)-$(RELEASE)
+	cp -a LICENSES $(TARGET)-$(RELEASE)
+#	gtar cJ --owner=managata --group=ezio -f ezio-$(RELEASE).tar.xz ezio-$(RELEASE)
+	zip -9 -r $(TARGET)-$(RELEASE).zip $(TARGET)-$(RELEASE)
+	rm -rf $(TARGET)-$(RELEASE)
+
+.PHONY: clean
+clean:
+	rm -f $(TARGET)
+	rm -f $(BINARY)
+	rm -f $(TARGET).exe
+	rm -f test/key/*
+	rm -rf ezio-*
