@@ -564,6 +564,8 @@ func ReadPrivateKey(ci *CipherInfo, path string, sign bool) (err error) {
 			}
 		}
 
+		dB(nil, "  ReadPrivateKey: xb.Type %s", b.Type)
+
 		switch b.Type {
 		case "RSA PRIVATE KEY":
 			*key, err = x509.ParsePKCS1PrivateKey(b.Bytes)
@@ -575,6 +577,20 @@ func ReadPrivateKey(ci *CipherInfo, path string, sign bool) (err error) {
 			return
 		case "EC PRIVATE KEY":
 			*key, err = x509.ParseECPrivateKey(b.Bytes)
+			return
+		case "PRIVATE KEY":
+			var ki interface{}
+			ki, err = x509.ParsePKCS8PrivateKey(b.Bytes)
+			if err != nil {
+				return
+			}
+			var ok bool
+			*key, ok = ki.(*rsa.PrivateKey)
+			if !ok {
+				return errPrivateNotFound
+			}
+			(*key).(*rsa.PrivateKey).Precompute()
+			err = (*key).(*rsa.PrivateKey).Validate()
 			return
 		}
 
